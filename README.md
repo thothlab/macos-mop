@@ -1,5 +1,7 @@
 # mop
 
+**English** | [Русский](README.ru.md)
+
 Fast macOS system cleaner CLI utility written in Rust.
 
 Clean system junk, caches, logs, app leftovers, build artifacts, and more — all from the terminal.
