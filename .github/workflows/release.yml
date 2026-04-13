@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            arch: arm64
+          - target: x86_64-apple-darwin
+            arch: x86_64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          cp target/${{ matrix.target }}/release/mop dist/mop-${{ matrix.arch }}
+          cd dist
+          tar czf mop-${{ matrix.arch }}.tar.gz mop-${{ matrix.arch }}
+          shasum -a 256 mop-${{ matrix.arch }}.tar.gz > mop-${{ matrix.arch }}.tar.gz.sha256
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mop-${{ matrix.arch }}
+          path: dist/
+
+  universal:
+    name: Create Universal Binary
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download arm64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mop-arm64
+          path: dist/arm64
+
+      - name: Download x86_64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mop-x86_64
+          path: dist/x86_64
+
+      - name: Create universal binary
+        run: |
+          mkdir -p dist/universal
+          lipo -create dist/arm64/mop-arm64 dist/x86_64/mop-x86_64 -output dist/universal/mop
+          cd dist/universal
+          tar czf mop-universal.tar.gz mop
+          shasum -a 256 mop-universal.tar.gz > mop-universal.tar.gz.sha256
+
+      - name: Upload universal artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mop-universal
+          path: dist/universal/
+
+  release:
+    name: Create Release
+    runs-on: macos-latest
+    needs: [build, universal]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/mop-arm64/mop-arm64.tar.gz
+            dist/mop-arm64/mop-arm64.tar.gz.sha256
+            dist/mop-x86_64/mop-x86_64.tar.gz
+            dist/mop-x86_64/mop-x86_64.tar.gz.sha256
+            dist/mop-universal/mop-universal.tar.gz
+            dist/mop-universal/mop-universal.tar.gz.sha256
