@@ -1,21 +1,21 @@
 # mop
 
-**English** | [Русский](README.ru.md)
+[English](README.en.md) | **Русский**
 
-Fast macOS system cleaner CLI utility written in Rust.
+Быстрая консольная утилита для очистки macOS, написанная на Rust.
 
-Clean system junk, caches, logs, app leftovers, build artifacts, and more — all from the terminal.
+Удаляет системный мусор, кэши, логи, остатки приложений, сборочные артефакты и многое другое — прямо из терминала.
 
-## Features
+## Возможности
 
-- **clean** — Remove system caches, logs, browser data, app leftovers, Homebrew cache, Trash, and more
-- **analyze** — Analyze disk space usage with visual bars and file type breakdown
-- **uninstall** — Completely remove applications with all associated files
-- **purge** — Find and remove build artifacts (node_modules, target, .build, venv, etc.)
-- **status** — System health overview: disk, memory, CPU, top processes
-- **installer** — Find and remove old installer files (.dmg, .pkg, .zip)
+- **clean** — Удаление системных кэшей, логов, данных браузеров, остатков приложений, кэша Homebrew, корзины и др.
+- **analyze** — Анализ дискового пространства с визуальными барами и разбивкой по типам файлов
+- **uninstall** — Полное удаление приложений вместе со всеми связанными файлами
+- **purge** — Поиск и удаление сборочных артефактов (node_modules, target, .build, venv и т.д.)
+- **status** — Обзор состояния системы: диск, память, CPU, процессы
+- **installer** — Поиск и удаление старых установочных файлов (.dmg, .pkg, .zip)
 
-## Installation
+## Установка
 
 ### Homebrew
 
@@ -24,94 +24,94 @@ brew tap thothlab/macos-mop
 brew install mop
 ```
 
-### Install script
+### Скрипт установки
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/thothlab/macos-mop/main/install.sh | bash
 ```
 
-### From source
+### Из исходников
 
 ```bash
 cargo install --git https://github.com/thothlab/macos-mop
 ```
 
-### From GitHub Releases
+### Из GitHub Releases
 
-Download the latest binary from [Releases](https://github.com/thothlab/macos-mop/releases) and place it in your PATH.
+Скачайте последний бинарник со страницы [Releases](https://github.com/thothlab/macos-mop/releases) и поместите в PATH.
 
-## Usage
+## Использование
 
 ```bash
-# Show what can be cleaned (dry run, nothing deleted)
+# Показать что можно очистить (без удаления)
 mop clean --dry-run --all
 
-# Clean all categories
+# Очистить всё
 mop clean --all
 
-# Clean specific categories
+# Очистить конкретные категории
 mop clean --category user-cache --category browser-cache
 
-# Analyze disk space
+# Анализ дискового пространства
 mop analyze ~/Documents --depth 3
 
-# Uninstall an app completely
+# Полное удаление приложения
 mop uninstall "Slack"
 
-# Remove build artifacts from projects
+# Удалить сборочные артефакты из проектов
 mop purge ~/Projects
 
-# System health status
+# Состояние системы
 mop status
 
-# Find installer files
+# Найти установочные файлы
 mop installer
 ```
 
-## Clean categories
+## Категории очистки
 
-| Category | Description |
+| Категория | Описание |
 |---|---|
-| `user-cache` | Application caches in ~/Library/Caches |
-| `system-logs` | System and user logs |
-| `crash-reports` | Crash and diagnostic reports |
-| `browser-cache` | Chrome, Safari, Firefox, Arc, Brave, Edge caches |
-| `app-leftovers` | Orphaned files from uninstalled apps |
-| `dev-tools` | Xcode, npm, yarn, pip, cargo, CocoaPods, Gradle, Maven, Go caches |
-| `homebrew` | Homebrew download cache and old formula versions |
-| `trash` | macOS Trash |
-| `downloads` | Old files in ~/Downloads |
-| `docker` | Docker Desktop data and buildx cache |
+| `user-cache` | Кэши приложений в ~/Library/Caches |
+| `system-logs` | Системные и пользовательские логи |
+| `crash-reports` | Отчёты о сбоях и диагностические данные |
+| `browser-cache` | Кэши Chrome, Safari, Firefox, Arc, Brave, Edge |
+| `app-leftovers` | Остатки удалённых приложений |
+| `dev-tools` | Кэши Xcode, npm, yarn, pip, cargo, CocoaPods, Gradle, Maven, Go |
+| `homebrew` | Кэш загрузок Homebrew и старые версии формул |
+| `trash` | Корзина macOS |
+| `downloads` | Старые файлы в ~/Downloads |
+| `docker` | Данные Docker Desktop и кэш buildx |
 
-## Configuration
+## Конфигурация
 
-Config file: `~/.config/mop/config.toml`
+Файл конфигурации: `~/.config/mop/config.toml`
 
 ```toml
-# Paths to scan for build artifacts
+# Пути для поиска сборочных артефактов
 purge_paths = ["~/Projects", "~/Developer"]
 
-# Paths that should never be cleaned
+# Пути, которые никогда не нужно чистить
 whitelist = []
 
-# Default categories for 'clean' command
+# Категории по умолчанию для команды 'clean'
 default_categories = ["user-cache", "system-logs", "crash-reports", "browser-cache", "trash"]
 
-# Age threshold for downloads cleanup (days)
+# Порог возраста для очистки загрузок (дни)
 download_age_days = 30
 
-# Age threshold for purge command (days)
+# Порог возраста для команды purge (дни)
 purge_age_days = 7
 ```
 
-## Safety
+## Безопасность
 
-- **Dry run** mode (`--dry-run`) to preview changes before deleting
-- Protected system paths (SIP-protected) are never touched
-- Protected system apps cannot be uninstalled
-- Whitelisting support for paths you want to keep
-- All operations logged to `~/.config/mop/operations.log`
+- Режим **dry run** (`--dry-run`) для просмотра изменений перед удалением
+- Защищённые системные пути (SIP) никогда не затрагиваются
+- Системные приложения защищены от удаления
+- Белый список путей, которые нужно сохранить
+- Все операции логируются в `~/.config/mop/operations.log`
 
-## License
+## Лицензия
 
 MIT
