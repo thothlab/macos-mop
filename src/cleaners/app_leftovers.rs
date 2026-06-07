@@ -53,7 +53,7 @@ impl Cleaner for AppLeftoversCleaner {
             &mut targets,
         );
 
-        targets.sort_by(|a, b| b.size.cmp(&a.size));
+        targets.sort_by_key(|b| std::cmp::Reverse(b.size));
         targets
     }
 }

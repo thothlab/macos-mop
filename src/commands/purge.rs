@@ -73,7 +73,7 @@ pub fn run(paths: Vec<String>, older_than: u64, dry_run: bool, force: bool) -> R
         return Ok(());
     }
 
-    all_artifacts.sort_by(|a, b| b.size.cmp(&a.size));
+    all_artifacts.sort_by_key(|b| std::cmp::Reverse(b.size));
 
     let total_size: u64 = all_artifacts.iter().map(|a| a.size).sum();
 

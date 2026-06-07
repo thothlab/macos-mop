@@ -80,7 +80,7 @@ impl Cleaner for DevToolsCleaner {
         let gem_cache = home.join(".gem");
         add_if_exists(&gem_cache, "Ruby gem cache", &mut targets);
 
-        targets.sort_by(|a, b| b.size.cmp(&a.size));
+        targets.sort_by_key(|b| std::cmp::Reverse(b.size));
         targets
     }
 }

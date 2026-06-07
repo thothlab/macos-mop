@@ -90,7 +90,7 @@ impl Cleaner for BrowserCacheCleaner {
             .join("Cache");
         add_if_exists(&edge_cache, "Microsoft Edge cache", &mut targets);
 
-        targets.sort_by(|a, b| b.size.cmp(&a.size));
+        targets.sort_by_key(|b| std::cmp::Reverse(b.size));
         targets
     }
 }

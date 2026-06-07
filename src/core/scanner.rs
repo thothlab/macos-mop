@@ -38,7 +38,7 @@ pub fn scan_directory(path: &Path, max_depth: usize) -> Vec<ScanEntry> {
         });
     }
 
-    entries.sort_by(|a, b| b.size.cmp(&a.size));
+    entries.sort_by_key(|b| std::cmp::Reverse(b.size));
     entries
 }
 
@@ -86,7 +86,7 @@ pub fn find_directories_by_name(root: &Path, names: &[&str]) -> Vec<ScanEntry> {
         }
     }
 
-    results.sort_by(|a, b| b.size.cmp(&a.size));
+    results.sort_by_key(|b| std::cmp::Reverse(b.size));
     results
 }
 
@@ -113,6 +113,6 @@ pub fn find_files_by_extension(root: &Path, extensions: &[&str]) -> Vec<ScanEntr
         }
     }
 
-    results.sort_by(|a, b| b.size.cmp(&a.size));
+    results.sort_by_key(|b| std::cmp::Reverse(b.size));
     results
 }

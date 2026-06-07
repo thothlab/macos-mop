@@ -49,7 +49,7 @@ pub fn run(dry_run: bool, force: bool) -> Result<()> {
         return Ok(());
     }
 
-    all_entries.sort_by(|a, b| b.size.cmp(&a.size));
+    all_entries.sort_by_key(|b| std::cmp::Reverse(b.size));
     let total_size: u64 = all_entries.iter().map(|e| e.size).sum();
 
     progress::print_header("Installer files found");
