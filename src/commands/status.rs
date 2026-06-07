@@ -46,7 +46,7 @@ pub fn run(json_output: bool) -> Result<()> {
         .collect();
 
     // Sort by memory usage — collect top 5
-    processes.sort_by(|a, b| b.1.cmp(&a.1));
+    processes.sort_by_key(|b| std::cmp::Reverse(b.1));
     let top_mem: Vec<_> = processes.iter().take(5).cloned().collect();
 
     // Sort by CPU usage — collect top 5

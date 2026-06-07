@@ -90,7 +90,7 @@ pub fn run(path: Option<String>, depth: usize, top: usize, json_output: bool) ->
     spinner.finish_and_clear();
 
     let mut ext_sorted: Vec<_> = extensions.into_iter().collect();
-    ext_sorted.sort_by(|a, b| b.1.cmp(&a.1));
+    ext_sorted.sort_by_key(|b| std::cmp::Reverse(b.1));
 
     progress::print_header("By file type (top 10)");
 
