@@ -1,7 +1,7 @@
 class Mop < Formula
   desc "Fast macOS system cleaner CLI utility"
   homepage "https://github.com/thothlab/macos-mop"
-  version "0.1.0"
+  version "0.1.1"
   license "MIT"
 
   on_macos do

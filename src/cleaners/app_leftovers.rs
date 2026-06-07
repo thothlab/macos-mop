@@ -19,19 +19,39 @@ impl Cleaner for AppLeftoversCleaner {
 
         // Scan Application Support for orphaned dirs
         let app_support = home.join("Library").join("Application Support");
-        scan_orphaned_entries(&app_support, &installed_apps, "App Support leftover", &mut targets);
+        scan_orphaned_entries(
+            &app_support,
+            &installed_apps,
+            "App Support leftover",
+            &mut targets,
+        );
 
         // Scan Containers
         let containers = home.join("Library").join("Containers");
-        scan_orphaned_entries(&containers, &installed_apps, "Container leftover", &mut targets);
+        scan_orphaned_entries(
+            &containers,
+            &installed_apps,
+            "Container leftover",
+            &mut targets,
+        );
 
         // Scan Group Containers
         let group_containers = home.join("Library").join("Group Containers");
-        scan_orphaned_entries(&group_containers, &installed_apps, "Group Container leftover", &mut targets);
+        scan_orphaned_entries(
+            &group_containers,
+            &installed_apps,
+            "Group Container leftover",
+            &mut targets,
+        );
 
         // Scan Saved Application State
         let saved_state = home.join("Library").join("Saved Application State");
-        scan_orphaned_entries(&saved_state, &installed_apps, "Saved state leftover", &mut targets);
+        scan_orphaned_entries(
+            &saved_state,
+            &installed_apps,
+            "Saved state leftover",
+            &mut targets,
+        );
 
         targets.sort_by(|a, b| b.size.cmp(&a.size));
         targets
@@ -43,14 +63,12 @@ fn get_installed_app_identifiers() -> HashSet<String> {
 
     for app_dir in &[
         PathBuf::from("/Applications"),
-        dirs::home_dir()
-            .unwrap_or_default()
-            .join("Applications"),
+        dirs::home_dir().unwrap_or_default().join("Applications"),
     ] {
         if let Ok(entries) = std::fs::read_dir(app_dir) {
             for entry in entries.filter_map(|e| e.ok()) {
                 let path = entry.path();
-                if path.extension().map_or(false, |e| e == "app") {
+                if path.extension().is_some_and(|e| e == "app") {
                     let name = path
                         .file_stem()
                         .unwrap_or_default()
@@ -112,9 +130,9 @@ fn scan_orphaned_entries(
             }
 
             // Check if this matches any installed app
-            let is_orphaned = !installed.iter().any(|app| {
-                name.contains(app) || app.contains(&name)
-            });
+            let is_orphaned = !installed
+                .iter()
+                .any(|app| name.contains(app) || app.contains(&name));
 
             if is_orphaned {
                 let size = dir_size(&path);

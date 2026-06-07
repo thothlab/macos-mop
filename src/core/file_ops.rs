@@ -40,8 +40,7 @@ pub fn safe_remove(path: &Path, dry_run: bool) -> Result<CleanResult> {
         fs::remove_dir_all(path)
             .with_context(|| format!("Failed to remove directory: {}", path.display()))
     } else {
-        fs::remove_file(path)
-            .with_context(|| format!("Failed to remove file: {}", path.display()))
+        fs::remove_file(path).with_context(|| format!("Failed to remove file: {}", path.display()))
     };
 
     match result {

@@ -111,6 +111,7 @@ purge_age_days = 7
 - Protected system apps cannot be uninstalled
 - Whitelisting support for paths you want to keep
 - All operations logged to `~/.config/mop/operations.log`
+- Deletion confirmation requires explicit uppercase `Y` — Enter and lowercase `y` are rejected
 
 ## License
 

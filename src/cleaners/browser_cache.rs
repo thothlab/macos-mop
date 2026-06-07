@@ -15,23 +15,36 @@ impl Cleaner for BrowserCacheCleaner {
         let caches = home.join("Library").join("Caches");
 
         // Chrome
-        let chrome_cache = app_support.join("Google").join("Chrome").join("Default").join("Cache");
+        let chrome_cache = app_support
+            .join("Google")
+            .join("Chrome")
+            .join("Default")
+            .join("Cache");
         add_if_exists(&chrome_cache, "Chrome cache", &mut targets);
 
-        let chrome_code_cache = app_support.join("Google").join("Chrome").join("Default").join("Code Cache");
+        let chrome_code_cache = app_support
+            .join("Google")
+            .join("Chrome")
+            .join("Default")
+            .join("Code Cache");
         add_if_exists(&chrome_code_cache, "Chrome code cache", &mut targets);
 
-        let chrome_service_worker = app_support.join("Google").join("Chrome").join("Default").join("Service Worker");
-        add_if_exists(&chrome_service_worker, "Chrome Service Worker cache", &mut targets);
+        let chrome_service_worker = app_support
+            .join("Google")
+            .join("Chrome")
+            .join("Default")
+            .join("Service Worker");
+        add_if_exists(
+            &chrome_service_worker,
+            "Chrome Service Worker cache",
+            &mut targets,
+        );
 
         // Safari
         let safari_cache = caches.join("com.apple.Safari");
         add_if_exists(&safari_cache, "Safari cache", &mut targets);
 
-        let safari_webpage = home
-            .join("Library")
-            .join("Safari")
-            .join("LocalStorage");
+        let safari_webpage = home.join("Library").join("Safari").join("LocalStorage");
         add_if_exists(&safari_webpage, "Safari local storage", &mut targets);
 
         // Firefox
@@ -55,15 +68,26 @@ impl Cleaner for BrowserCacheCleaner {
         }
 
         // Arc
-        let arc_cache = app_support.join("Arc").join("User Data").join("Default").join("Cache");
+        let arc_cache = app_support
+            .join("Arc")
+            .join("User Data")
+            .join("Default")
+            .join("Cache");
         add_if_exists(&arc_cache, "Arc browser cache", &mut targets);
 
         // Brave
-        let brave_cache = app_support.join("BraveSoftware").join("Brave-Browser").join("Default").join("Cache");
+        let brave_cache = app_support
+            .join("BraveSoftware")
+            .join("Brave-Browser")
+            .join("Default")
+            .join("Cache");
         add_if_exists(&brave_cache, "Brave browser cache", &mut targets);
 
         // Edge
-        let edge_cache = app_support.join("Microsoft Edge").join("Default").join("Cache");
+        let edge_cache = app_support
+            .join("Microsoft Edge")
+            .join("Default")
+            .join("Cache");
         add_if_exists(&edge_cache, "Microsoft Edge cache", &mut targets);
 
         targets.sort_by(|a, b| b.size.cmp(&a.size));

@@ -35,12 +35,7 @@ struct ArtifactEntry {
     days_old: u64,
 }
 
-pub fn run(
-    paths: Vec<String>,
-    older_than: u64,
-    dry_run: bool,
-    force: bool,
-) -> Result<()> {
+pub fn run(paths: Vec<String>, older_than: u64, dry_run: bool, force: bool) -> Result<()> {
     let config = Config::load().unwrap_or_default();
 
     let scan_paths: Vec<PathBuf> = if paths.is_empty() {
@@ -49,23 +44,20 @@ pub fn run(
         paths.iter().map(PathBuf::from).collect()
     };
 
-    println!(
-        "\n{}",
-        style("  mop — Build Artifact Purge").bold().cyan()
-    );
+    println!("\n{}", style("  mop — Build Artifact Purge").bold().cyan());
 
     if dry_run {
-        println!("  {}", style("(Dry run — nothing will be deleted)").yellow());
+        println!(
+            "  {}",
+            style("(Dry run — nothing will be deleted)").yellow()
+        );
     }
 
     let mut all_artifacts: Vec<ArtifactEntry> = Vec::new();
 
     for scan_path in &scan_paths {
         if !scan_path.exists() {
-            progress::print_warning(&format!(
-                "Path does not exist: {}",
-                scan_path.display()
-            ));
+            progress::print_warning(&format!("Path does not exist: {}", scan_path.display()));
             continue;
         }
 
@@ -100,10 +92,7 @@ pub fn run(
     table::print_summary("Total reclaimable", total_size);
 
     if dry_run {
-        println!(
-            "\n  {}",
-            style("Run without --dry-run to purge.").dim()
-        );
+        println!("\n  {}", style("Run without --dry-run to purge.").dim());
         return Ok(());
     }
 

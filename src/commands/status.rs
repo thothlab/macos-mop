@@ -97,10 +97,7 @@ pub fn run(json_output: bool) -> Result<()> {
         return Ok(());
     }
 
-    println!(
-        "\n{}",
-        style("  mop — System Status").bold().cyan()
-    );
+    println!("\n{}", style("  mop — System Status").bold().cyan());
 
     // Health Score
     let health_color = if health_score >= 80 {
@@ -125,11 +122,7 @@ pub fn run(json_output: bool) -> Result<()> {
 
     // CPU
     progress::print_header("CPU");
-    println!(
-        "  {} ({} cores)",
-        style(&cpu_brand).bold(),
-        cpu_count
-    );
+    println!("  {} ({} cores)", style(&cpu_brand).bold(), cpu_count);
 
     // Top processes by memory
     progress::print_header("Top Processes (by Memory)");
@@ -167,11 +160,7 @@ fn print_usage_bar(label: &str, used: u64, total: u64) {
 
     let bar_width = 30;
     let filled = (pct as usize * bar_width / 100).min(bar_width);
-    let bar = format!(
-        "{}{}",
-        "█".repeat(filled),
-        "░".repeat(bar_width - filled)
-    );
+    let bar = format!("{}{}", "█".repeat(filled), "░".repeat(bar_width - filled));
 
     let bar_colored = if pct >= 90 {
         style(&bar).red()

@@ -29,10 +29,7 @@ impl Cleaner for DevToolsCleaner {
         add_if_exists(&archives, "Xcode Archives", &mut targets);
 
         // CoreSimulator
-        let core_sim = home
-            .join("Library")
-            .join("Developer")
-            .join("CoreSimulator");
+        let core_sim = home.join("Library").join("Developer").join("CoreSimulator");
         add_if_exists(&core_sim, "CoreSimulator data", &mut targets);
 
         // Xcode iOS DeviceSupport

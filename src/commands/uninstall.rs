@@ -1,6 +1,6 @@
 use anyhow::Result;
 use console::style;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use crate::core::file_ops;
 use crate::core::protection;
@@ -17,10 +17,7 @@ struct AppInfo {
 }
 
 pub fn run(name: Option<String>, dry_run: bool, force: bool) -> Result<()> {
-    println!(
-        "\n{}",
-        style("  mop — App Uninstaller").bold().cyan()
-    );
+    println!("\n{}", style("  mop — App Uninstaller").bold().cyan());
 
     // List installed applications
     let apps = list_applications();
@@ -78,10 +75,7 @@ pub fn run(name: Option<String>, dry_run: bool, force: bool) -> Result<()> {
         return Ok(());
     }
 
-    println!(
-        "\n  Uninstalling: {}",
-        style(&app.name).bold()
-    );
+    println!("\n  Uninstalling: {}", style(&app.name).bold());
 
     if let Some(ref bid) = app.bundle_id {
         println!("  Bundle ID: {}", style(bid).dim());
@@ -167,14 +161,12 @@ fn list_applications() -> Vec<AppInfo> {
 
     for app_dir in &[
         PathBuf::from("/Applications"),
-        dirs::home_dir()
-            .unwrap_or_default()
-            .join("Applications"),
+        dirs::home_dir().unwrap_or_default().join("Applications"),
     ] {
         if let Ok(entries) = std::fs::read_dir(app_dir) {
             for entry in entries.filter_map(|e| e.ok()) {
                 let path = entry.path();
-                if path.extension().map_or(false, |e| e == "app") {
+                if path.extension().is_some_and(|e| e == "app") {
                     let name = path
                         .file_stem()
                         .unwrap_or_default()
@@ -199,7 +191,7 @@ fn list_applications() -> Vec<AppInfo> {
     apps
 }
 
-fn get_bundle_id(app_path: &PathBuf) -> Option<String> {
+fn get_bundle_id(app_path: &Path) -> Option<String> {
     let plist_path = app_path.join("Contents").join("Info.plist");
     if let Ok(plist) = plist::Value::from_file(&plist_path) {
         if let Some(dict) = plist.as_dictionary() {
@@ -211,7 +203,10 @@ fn get_bundle_id(app_path: &PathBuf) -> Option<String> {
     None
 }
 
-fn find_associated_files(app_name: &str, bundle_id: &Option<String>) -> Vec<(PathBuf, u64, String)> {
+fn find_associated_files(
+    app_name: &str,
+    bundle_id: &Option<String>,
+) -> Vec<(PathBuf, u64, String)> {
     let mut files = Vec::new();
     let home = dirs::home_dir().unwrap_or_default();
 
@@ -230,12 +225,21 @@ fn find_associated_files(app_name: &str, bundle_id: &Option<String>) -> Vec<(Pat
     };
 
     let search_dirs = [
-        (home.join("Library").join("Application Support"), "App Support"),
+        (
+            home.join("Library").join("Application Support"),
+            "App Support",
+        ),
         (home.join("Library").join("Caches"), "Cache"),
         (home.join("Library").join("Preferences"), "Preferences"),
         (home.join("Library").join("Containers"), "Container"),
-        (home.join("Library").join("Group Containers"), "Group Container"),
-        (home.join("Library").join("Saved Application State"), "Saved State"),
+        (
+            home.join("Library").join("Group Containers"),
+            "Group Container",
+        ),
+        (
+            home.join("Library").join("Saved Application State"),
+            "Saved State",
+        ),
         (home.join("Library").join("HTTPStorages"), "HTTP Storage"),
         (home.join("Library").join("WebKit"), "WebKit data"),
         (home.join("Library").join("LaunchAgents"), "Launch Agent"),

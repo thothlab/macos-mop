@@ -11,20 +11,17 @@ use crate::ui::table::{self, TableRow};
 const INSTALLER_EXTENSIONS: &[&str] = &["dmg", "pkg", "zip", "iso", "tar", "gz", "bz2", "xz"];
 
 pub fn run(dry_run: bool, force: bool) -> Result<()> {
-    println!(
-        "\n{}",
-        style("  mop — Installer Finder").bold().cyan()
-    );
+    println!("\n{}", style("  mop — Installer Finder").bold().cyan());
 
     if dry_run {
-        println!("  {}", style("(Dry run — nothing will be deleted)").yellow());
+        println!(
+            "  {}",
+            style("(Dry run — nothing will be deleted)").yellow()
+        );
     }
 
     let home = dirs::home_dir().unwrap_or_default();
-    let search_dirs = vec![
-        home.join("Downloads"),
-        home.join("Desktop"),
-    ];
+    let search_dirs = vec![home.join("Downloads"), home.join("Desktop")];
 
     // Also check Homebrew cache
     let brew_cache = home.join("Library").join("Caches").join("Homebrew");
@@ -83,10 +80,7 @@ pub fn run(dry_run: bool, force: bool) -> Result<()> {
     table::print_summary("Total", total_size);
 
     if dry_run {
-        println!(
-            "\n  {}",
-            style("Run without --dry-run to delete.").dim()
-        );
+        println!("\n  {}", style("Run without --dry-run to delete.").dim());
         return Ok(());
     }
 

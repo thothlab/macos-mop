@@ -71,8 +71,14 @@ fn scan_old_versions(cellar: &PathBuf, targets: &mut Vec<CleanTarget>) {
 
                 // Sort by modification time (newest first)
                 version_dirs.sort_by(|a, b| {
-                    let a_time = a.metadata().and_then(|m| m.modified()).unwrap_or(std::time::SystemTime::UNIX_EPOCH);
-                    let b_time = b.metadata().and_then(|m| m.modified()).unwrap_or(std::time::SystemTime::UNIX_EPOCH);
+                    let a_time = a
+                        .metadata()
+                        .and_then(|m| m.modified())
+                        .unwrap_or(std::time::SystemTime::UNIX_EPOCH);
+                    let b_time = b
+                        .metadata()
+                        .and_then(|m| m.modified())
+                        .unwrap_or(std::time::SystemTime::UNIX_EPOCH);
                     b_time.cmp(&a_time)
                 });
 

@@ -48,13 +48,13 @@ pub fn run(
         categories
     };
 
-    println!(
-        "\n{}",
-        style("  mop — System Cleanup").bold().cyan()
-    );
+    println!("\n{}", style("  mop — System Cleanup").bold().cyan());
 
     if dry_run {
-        println!("  {}", style("(Dry run — nothing will be deleted)").yellow());
+        println!(
+            "  {}",
+            style("(Dry run — nothing will be deleted)").yellow()
+        );
     }
 
     let mut total_size: u64 = 0;
@@ -124,10 +124,7 @@ pub fn run(
     }
 
     if dry_run {
-        println!(
-            "\n  {}",
-            style("Run without --dry-run to clean.").dim()
-        );
+        println!("\n  {}", style("Run without --dry-run to clean.").dim());
         return Ok(());
     }
 
@@ -162,10 +159,7 @@ pub fn run(
                 Ok(r) if r.error.is_some() => {
                     errors += 1;
                     if verbose {
-                        progress::print_error(&format!(
-                            "{}",
-                            r.error.unwrap_or_default()
-                        ));
+                        progress::print_error(&r.error.unwrap_or_default().to_string());
                     }
                 }
                 _ => errors += 1,

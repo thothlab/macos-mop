@@ -1,12 +1,25 @@
-use dialoguer::{Confirm, MultiSelect};
+use dialoguer::MultiSelect;
+use std::io::{self, Write};
 
-/// Ask for confirmation
+/// Ask for confirmation — requires explicit uppercase 'Y' to proceed.
+/// Enter alone and lowercase 'y' are rejected.
 pub fn confirm(message: &str) -> bool {
-    Confirm::new()
-        .with_prompt(message)
-        .default(false)
-        .interact()
-        .unwrap_or(false)
+    loop {
+        print!("  {} [Y/n]: ", message);
+        io::stdout().flush().unwrap_or(());
+
+        let mut input = String::new();
+        if io::stdin().read_line(&mut input).is_err() {
+            return false;
+        }
+
+        match input.trim() {
+            "Y" => return true,
+            "n" | "N" => return false,
+            "" => eprintln!("  Please type 'Y' to confirm or 'n' to cancel."),
+            _ => eprintln!("  Use uppercase 'Y' to confirm or 'n' to cancel."),
+        }
+    }
 }
 
 /// Multi-select from a list of items

@@ -31,9 +31,7 @@ impl Cleaner for DockerCleaner {
         }
 
         // Docker images/layers cache
-        let docker_cache = home
-            .join(".docker")
-            .join("buildx");
+        let docker_cache = home.join(".docker").join("buildx");
         if docker_cache.exists() {
             let size = dir_size(&docker_cache);
             if size > 1_048_576 {

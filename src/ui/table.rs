@@ -16,7 +16,12 @@ pub fn print_size_table(rows: &[TableRow], total: u64) {
         return;
     }
 
-    let max_name_len = rows.iter().map(|r| r.name.len()).max().unwrap_or(20).min(50);
+    let max_name_len = rows
+        .iter()
+        .map(|r| r.name.len())
+        .max()
+        .unwrap_or(20)
+        .min(50);
     let bar_width = 20;
 
     for row in rows {
@@ -32,11 +37,7 @@ pub fn print_size_table(rows: &[TableRow], total: u64) {
             0.0
         };
         let filled = (fraction * bar_width as f64) as usize;
-        let bar = format!(
-            "{}{}",
-            "█".repeat(filled),
-            "░".repeat(bar_width - filled)
-        );
+        let bar = format!("{}{}", "█".repeat(filled), "░".repeat(bar_width - filled));
 
         let size_str = colors::colored_size(row.size);
 
