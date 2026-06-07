@@ -150,6 +150,12 @@ brew tap thothlab/macos-mop
 brew install mop
 ```
 
+Or in a single command:
+
+```bash
+brew install thothlab/macos-mop/mop
+```
+
 ### Install script
 
 ```bash
